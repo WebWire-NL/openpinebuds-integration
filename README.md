@@ -79,6 +79,12 @@ scripts/dwarf_protos.py [lib.a] [object-regex] [out.md]    # DWARF -> prototypes
 scripts/publish_headerless.py [/path/to/clone]              # header-less API + JSON + generated headers
 ```
 
+## Credit
+
+The analysis, tooling and documentation in this repo are by
+**[@WebWire-NL](https://github.com/WebWire-NL)**. The vendored patch series are other people's
+work, credited per fork in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
+
 ## Licence / status of this repo
 
 **No licence is granted for anything here.** Upstream OpenPineBuds carries no open-source
