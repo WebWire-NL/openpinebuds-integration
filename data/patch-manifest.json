@@ -1,0 +1,215 @@
+{
+  "generated": "2026-09-19",
+  "upstream_last_push": "2026-07-29T08:55:33Z",
+  "sources": [
+    {
+      "fork": "erik-smit/EriksPineBuds",
+      "branch": "main",
+      "file": "patches/erik-smit-EriksPineBuds-main.patch",
+      "why": "touch controls + BLE config service + parametric EQ + Android app",
+      "ahead": 49,
+      "behind": 18,
+      "base": "2204c83e3013f791e64d1a3fac586783f18abfec",
+      "head": "b24ef2639055d9c6ae0e80bf9266cf0b41f7dabf",
+      "files_changed": 137
+    },
+    {
+      "fork": "nnonickreal/openqore-sdk",
+      "branch": "main",
+      "file": "patches/nnonickreal-openqore-sdk-main.patch",
+      "why": "BES2300P/Soundcore port: ANC with aud section, ADC driver, OTA from source",
+      "ahead": 37,
+      "behind": 6,
+      "base": "e2e6bd9b6c4dfae3f1b6dd4f22a081cf51e11606",
+      "head": "a9f510edba823199b28a810a90744a837724cc34",
+      "files_changed": 39
+    },
+    {
+      "fork": "hugohabthroxy/OpenPineBuds",
+      "branch": "main",
+      "file": "patches/hugohabthroxy-OpenPineBuds-main.patch",
+      "why": "BLE advertising on open_source target + cueing service + host tooling",
+      "ahead": 17,
+      "behind": 10,
+      "base": "fd5fa49e2ef1d02662a2eb815f1d514a8089ecb9",
+      "head": "3d28dac4ca3f8fc1d5d7e7033a863a2b8ba22c74",
+      "files_changed": 39
+    },
+    {
+      "fork": "RTIS-Lab/OpenPineBuds",
+      "branch": "main",
+      "file": "patches/RTIS-Lab-OpenPineBuds-main.patch",
+      "why": "mic streaming / remote logging over RFCOMM + capture scripts",
+      "ahead": 5,
+      "behind": 6,
+      "base": "e2e6bd9b6c4dfae3f1b6dd4f22a081cf51e11606",
+      "head": "200d58c6e6227251ae974d2eb3b4517fc36dce1b",
+      "files_changed": 26
+    },
+    {
+      "fork": "wojtas999/OpenPineBuds",
+      "branch": "wojtas",
+      "file": "patches/wojtas999-OpenPineBuds-wojtas.patch",
+      "why": "mic streaming feature branch (invisible on main)",
+      "ahead": 5,
+      "behind": 22,
+      "base": "4a97664378bf01e4f4b743e175748cc3a46fbd74",
+      "head": "fdf13982037b255de0cae9e1b07a714f63c81c0e",
+      "files_changed": 20
+    },
+    {
+      "fork": "arin-s/DOOMBuds",
+      "branch": "main",
+      "file": "patches/arin-s-DOOMBuds-main.patch",
+      "why": "doomgeneric port; SRAM/segment reclaim tricks",
+      "ahead": 19,
+      "behind": 22,
+      "base": "4a97664378bf01e4f4b743e175748cc3a46fbd74",
+      "head": "b36c59ab151825b9b29f66ea31cadee3d8297d20",
+      "files_changed": 14
+    },
+    {
+      "fork": "shymega/OpenPineBuds",
+      "branch": "cmake",
+      "file": "patches/shymega-OpenPineBuds-cmake.patch",
+      "why": "CMake conversion (upstream PR #60)",
+      "ahead": 16,
+      "behind": 62,
+      "base": "7facfe997caefbe0612ca18ce2be11892fd65c66",
+      "head": "1a99f29f2ac0fb4c826f76a9b07346de79520879",
+      "files_changed": 300
+    },
+    {
+      "fork": "shymega/OpenPineBuds",
+      "branch": "rust-support",
+      "file": "patches/shymega-OpenPineBuds-rust-support.patch",
+      "why": "CMake + Rust support",
+      "ahead": 17,
+      "behind": 62,
+      "base": "7facfe997caefbe0612ca18ce2be11892fd65c66",
+      "head": "a459bcb5e8fc93fdc865174fa1efe079d244d5b3",
+      "files_changed": 300
+    },
+    {
+      "fork": "nicka101/OpenPineBuds",
+      "branch": "cmake",
+      "file": "patches/nicka101-OpenPineBuds-cmake.patch",
+      "why": "independent copy of the CMake work",
+      "ahead": 17,
+      "behind": 24,
+      "base": "da7de397eccee08630decd4604d4005f99cfb01c",
+      "head": "53f1df88c26af27ef2c9a799c7ef1da55f4cc816",
+      "files_changed": 300
+    },
+    {
+      "fork": "Haxk20/OpenPineBuds",
+      "branch": "anc-testing",
+      "file": "patches/Haxk20-OpenPineBuds-anc-testing.patch",
+      "why": "ANC testing branch (older lineage)",
+      "ahead": 15,
+      "behind": 114,
+      "base": "22ba33ecfe6f572fa36e6a06084fee0bbd74deff",
+      "head": "af43a55b0f672b10135ed6e19f6383f7c7220e8c",
+      "files_changed": 9
+    },
+    {
+      "fork": "ThatcherC/OpenPineBuds",
+      "branch": "build-from-mp3s",
+      "file": "patches/ThatcherC-OpenPineBuds-build-from-mp3s.patch",
+      "why": "original sound-file build system work",
+      "ahead": 26,
+      "behind": 132,
+      "base": "cede4b1c01fb40af6ca2d5bede6a15a32356c5a7",
+      "head": "d21b9279462a63f292c8a6ef7d72f60bf83ea6df",
+      "files_changed": 73
+    },
+    {
+      "fork": "BreezeLabsAG/OpenPineBuds",
+      "branch": "ph_dsp_bypass",
+      "file": "patches/BreezeLabsAG-OpenPineBuds-ph_dsp_bypass.patch",
+      "why": "mic-path DSP bypass modes",
+      "ahead": 6,
+      "behind": 12,
+      "base": "ab15320d1d38aa1adf2e1bdbef4bc45d100ae8cc",
+      "head": "68a613ba7bbc9bbb870da477bc373b21b75e4113",
+      "files_changed": 95
+    },
+    {
+      "fork": "BreezeLabsAG/OpenPineBuds",
+      "branch": "SPEECH_TX_EQ_approach",
+      "file": "patches/BreezeLabsAG-OpenPineBuds-SPEECH_TX_EQ_approach.patch",
+      "why": "SPEECH_TX_EQ override experiment",
+      "ahead": 1,
+      "behind": 12,
+      "base": "ab15320d1d38aa1adf2e1bdbef4bc45d100ae8cc",
+      "head": "c3ab580345b51240dd5f391c5e4c4ecdba595a15",
+      "files_changed": 2
+    },
+    {
+      "fork": "BreezeLabsAG/OpenPineBuds",
+      "branch": "SPEECH_TX_MIC_CALIBRATION_approach",
+      "file": "patches/BreezeLabsAG-OpenPineBuds-SPEECH_TX_MIC_CALIBRATION_approach.patch",
+      "why": "mic calibration experiment",
+      "ahead": 1,
+      "behind": 12,
+      "base": "ab15320d1d38aa1adf2e1bdbef4bc45d100ae8cc",
+      "head": "f84e302586f53c466b34b9b58fb8470121311a31",
+      "files_changed": 4
+    },
+    {
+      "fork": "SilentBob347/OpenPineBuds",
+      "branch": "anc-tuning",
+      "file": "patches/SilentBob347-OpenPineBuds-anc-tuning.patch",
+      "why": "hand ANC tuning in tgt_hardware.c",
+      "ahead": 5,
+      "behind": 16,
+      "base": "54db173e1d6a09defdb905c06805f0df4db0ad2e",
+      "head": "6e234637bda3665cc1824f6551303d50db91adeb",
+      "files_changed": 5
+    },
+    {
+      "fork": "SilentBob347/OpenPineBuds",
+      "branch": "anc-testing",
+      "file": "patches/SilentBob347-OpenPineBuds-anc-testing.patch",
+      "why": "audio-section ANC test",
+      "ahead": 1,
+      "behind": 0,
+      "base": "81b9afc71ac7e5d41a10ff9229279e645bbc1175",
+      "head": "4771d4517881b1447fa0d81ec1d284e8ba568948",
+      "files_changed": 2
+    },
+    {
+      "fork": "mbyzhang/OpenPineBuds",
+      "branch": "main",
+      "file": "patches/mbyzhang-OpenPineBuds-main.patch",
+      "why": "ANC FB mic for BT audio (talk-through)",
+      "ahead": 1,
+      "behind": 22,
+      "base": "4a97664378bf01e4f4b743e175748cc3a46fbd74",
+      "head": "749d299ea8a6b50a1c9c44ec4ca73850b8fe8f29",
+      "files_changed": 6
+    },
+    {
+      "fork": "jdc-cunningham/OpenPineBuds",
+      "branch": "main",
+      "file": "patches/jdc-cunningham-OpenPineBuds-main.patch",
+      "why": "FR tuning experiments vs measured headphones",
+      "ahead": 3,
+      "behind": 82,
+      "base": "185cc2bc296d6a041404245dec93e350aa7e50a1",
+      "head": "ebe0b02b533b184240f2563c1927a5dd469733e7",
+      "files_changed": 1
+    },
+    {
+      "fork": "Zoey-Tan/OpenPineBuds",
+      "branch": "main",
+      "file": "patches/Zoey-Tan-OpenPineBuds-main.patch",
+      "why": "HFP sample-rate experiment + macOS flash scripts",
+      "ahead": 1,
+      "behind": 6,
+      "base": "e2e6bd9b6c4dfae3f1b6dd4f22a081cf51e11606",
+      "head": "3a31cbf8119d60a90f83c9f64f2ca72b1f2a9d66",
+      "files_changed": 5
+    }
+  ]
+}

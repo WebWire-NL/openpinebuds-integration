@@ -29,8 +29,8 @@ the fork network counts once.
 | [`include/anc_reconstructed/`](include/anc_reconstructed) | generated declarations, one header per withheld vendor source file |
 | [`docs/patch-status.md`](docs/patch-status.md) | replay result for every patch (`git am --3way` onto its recorded base) |
 | [`docs/upstream-answers.md`](docs/upstream-answers.md) | paste-ready answers to the recurring upstream questions (the EQ and touch threads are locked, so those two live here) |
-| [`patches/manifest.json`](patches/manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed |
-| `patches/*.patch` | commit-for-commit patches (binary sections stripped) |
+| [`data/patch-manifest.json`](data/patch-manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed (metadata only, no diffs) |
+| `patches/*.patch` | **not distributed** - commit-for-commit patches are fetched locally by `scripts/refresh.py` into `patches/` (gitignored). They are third-party diffs whose context lines derive from BES shared-source code, so they stay out of this repo |
 
 ## Result of the survey
 
@@ -57,12 +57,15 @@ Two forks are pure copies of a fork (`kuleuven-emedia` = `hugohabthroxy`, `YoonL
 
 ## Using a patch
 
+The `.patch` files are not distributed here (see the status section below). Fetch them locally first:
+
 ```sh
+scripts/refresh.py                     # writes patches/*.patch (gitignored) + data/patch-manifest.json
 git clone https://github.com/pine64/OpenPineBuds && cd OpenPineBuds
 base=$(jq -r '.sources[] | select(.file=="patches/hugohabthroxy-OpenPineBuds-main.patch") | .base' \
-        /path/to/patches/manifest.json)
+        /path/to/openpinebuds-integration/data/patch-manifest.json)
 git checkout -b try-hugo "$base"
-git am --3way /path/to/patches/hugohabthroxy-OpenPineBuds-main.patch
+git am --3way /path/to/openpinebuds-integration/patches/hugohabthroxy-OpenPineBuds-main.patch
 ```
 
 14/19 patches replay commit-for-commit; the five that do not are listed in
@@ -72,7 +75,7 @@ parallel merges). Prefer working on a fork of upstream and rebasing over carryin
 ## Refreshing
 
 ```sh
-scripts/refresh.py                    # re-survey forks + re-download patches (needs `gh` auth)
+scripts/refresh.py                    # re-survey forks + fetch patches/ (gitignored) + data/patch-manifest.json
 scripts/verify_patches.py [/path/to/OpenPineBuds-clone]   # replay check
 scripts/blobmap.py [/path/to/OpenPineBuds-clone]           # closed-blob inventory (writes docs/closed-blobs.md)
 scripts/apisurface.py [/path/to/OpenPineBuds-clone]        # exported/required symbol surface (writes docs/sdk-surface.md)
@@ -91,7 +94,18 @@ work, credited per fork in [`CONTRIBUTORS.md`](CONTRIBUTORS.md).
 **No licence is granted for anything here.** Upstream OpenPineBuds carries no open-source
 licence (it is BES "shared source", with BES proprietary headers on ~800 files and ~23 closed
 `.a` blobs still linked by the open build), and the relicensing effort is stalled on BES
-co-operation (upstream issues #18, #76, #92, #93, #94). The patches are third-party diffs whose
-context lines derive from that unlicensed code, so this repo is deliberately **private**
-working material, not a distribution. Make it public only after upstream's licensing question
-is settled.
+co-operation (upstream issues #18, #76, #92, #93, #94).
+
+What this repo publishes is **metadata about binaries that are already distributed**: DWARF-derived
+declarations and symbol inventories, file and directory listings, build flags, and survey tables.
+It contains no vendor source, no decompiled code and no binaries. The one category that *is*
+derived from unlicensed code - the third-party fork patches, whose context lines are BES
+shared-source - is deliberately **not** in this repo or in its history: `scripts/refresh.py`
+fetches them into `patches/`, which is gitignored, and `data/patch-manifest.json` records only
+their base/head SHAs, sizes and counts.
+
+Implementations named in the analysis remain BES's proprietary code, and a reconstructed
+declaration grants no licence to the implementation behind it. The arrangement exists so the
+analysis can be linked from the upstream conversations (PR #126 and the issue replies) while the
+diffs stay out of circulation; if relicensing later permits more, the fetched series can be
+committed back.

@@ -1,0 +1,3 @@
+# fork patch series are fetched locally by scripts/refresh.py and are NOT distributed:
+# they are third-party diffs whose context comes from BES shared-source code.
+patches/

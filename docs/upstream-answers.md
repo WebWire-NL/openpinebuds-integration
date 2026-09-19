@@ -32,7 +32,7 @@ This is implemented now, in a fork rather than here - worth knowing since the is
 
 EQ landed over that fork's releases: v1.1.0 → v1.3.0 (`Add configurable N-band equalizer`, then fixes for persistence at boot, slave/bud EQ sync, and more musical presets).
 
-We keep it as a replayable patch series and record what replays cleanly: `patches/erik-smit-EriksPineBuds-main.patch` and <https://github.com/WebWire-NL/openpinebuds-integration/blob/main/docs/patch-status.md>. Prefer the fork's branch as the source of truth - our patch is a reviewable snapshot, nothing more.
+We keep it as a replayable patch series and record what replays cleanly: <https://github.com/WebWire-NL/openpinebuds-integration/blob/main/docs/patch-status.md>. Prefer the fork's branch as the source of truth - our patch is a reviewable snapshot, nothing more.
 
 
 ---
@@ -52,5 +52,5 @@ If you would rather not rebuild per change: [erik-smit/EriksPineBuds](https://gi
 - The action set includes `OPB_ACTION_NONE = 0x0000` (plus a validator that rejects out-of-range actions), so "disable the vast majority of them" is literally setting those gestures to NONE. There is also `OPB_ACTION_MUTE_MIC`, `OPB_ACTION_TOGGLE_ANC` etc. if you want a couple left.
 - Caveat documented in that fork: the config service only advertises on the `BES_ble` device, not the main audio one, and the fork's README notes its BLE security limitations.
 
-We replay it as a patch series and record where it stops applying cleanly (2 of its 49 commits, the first conflict being `Fix BLE initialization crash and enable BLE stack`): `patches/erik-smit-EriksPineBuds-main.patch`, <https://github.com/WebWire-NL/openpinebuds-integration/blob/main/docs/patch-status.md>. For this use case just build the fork's branch directly - our patch is a reviewable snapshot, not a substitute.
+We replay it as a patch series and record where it stops applying cleanly (2 of its 49 commits, the first conflict being `Fix BLE initialization crash and enable BLE stack`): the erik-smit series (fetched locally by `scripts/refresh.py`; the diffs are not distributed), <https://github.com/WebWire-NL/openpinebuds-integration/blob/main/docs/patch-status.md>. For this use case just build the fork's branch directly - our patch is a reviewable snapshot, not a substitute.
 

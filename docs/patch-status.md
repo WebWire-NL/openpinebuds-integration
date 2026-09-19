@@ -1,6 +1,9 @@
 # Patch replay status
 
-Each `patches/*.patch` replayed onto its recorded base commit with `git am --3way`; `commits` = commits created / 19 entries.
+Each fork's patch series replayed onto its recorded base commit with `git am --3way`; `commits` = commits created / 19 entries.
+The `.patch` files are fetched by `scripts/refresh.py` into `patches/` (gitignored) and are **not** distributed in this
+repo - they are third-party diffs whose context lines come from BES shared-source code. `data/patch-manifest.json` holds
+the SHAs and counts behind this table.
 
 | fork | branch | result | commits | first conflicting commit |
 |---|---|---|---:|---|
