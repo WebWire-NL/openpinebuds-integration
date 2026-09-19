@@ -21,6 +21,8 @@ the fork network counts once.
 | [`docs/fork-survey.md`](docs/fork-survey.md) | all 47 forks: ahead/behind vs upstream, last push, recent commit subjects |
 | [`docs/assessment.md`](docs/assessment.md) | which fork work is worth landing, which is only reference material, risks, roadmap |
 | [`docs/closed-blobs.md`](docs/closed-blobs.md) | what is recoverable from the 23 closed `.a` blobs (DWARF, source paths, flags, code size) |
+| [`docs/sdk-surface.md`](docs/sdk-surface.md) | what the blobs export (4,723 functions), what the tree already documents, and what the blobs require back |
+| [`docs/anc-prototypes.md`](docs/anc-prototypes.md) | 593 ANC/DSP prototypes reconstructed from blob DWARF (return types, params, source lines) |
 | [`docs/patch-status.md`](docs/patch-status.md) | replay result for every patch (`git am --3way` onto its recorded base) |
 | [`patches/manifest.json`](patches/manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed |
 | `patches/*.patch` | commit-for-commit patches (binary sections stripped) |
@@ -68,6 +70,8 @@ parallel merges). Prefer working on a fork of upstream and rebasing over carryin
 scripts/refresh.py                    # re-survey forks + re-download patches (needs `gh` auth)
 scripts/verify_patches.py [/path/to/OpenPineBuds-clone]   # replay check
 scripts/blobmap.py [/path/to/OpenPineBuds-clone]           # closed-blob inventory (writes docs/closed-blobs.md)
+scripts/apisurface.py [/path/to/OpenPineBuds-clone]        # exported/required symbol surface (writes docs/sdk-surface.md)
+scripts/dwarf_protos.py [lib.a] [object-regex] [out.md]    # DWARF -> prototypes (writes docs/anc-prototypes.md)
 ```
 
 ## Licence / status of this repo

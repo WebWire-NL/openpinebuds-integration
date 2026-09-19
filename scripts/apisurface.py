@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""What the closed blobs expose, and what they require back.
+
+Writes docs/sdk-surface.md. Two directions are measured:
+  out  - exported symbols of each blob, split into "declared in a header shipped in the
+         open tree" (the SDK's published API), "called by open sources" (the used surface)
+         and "internal" (neither: private to the blob).
+  in   - undefined symbols of the blobs, split into "provided by the open tree",
+         "provided by another blob" and "unresolved" (ROM/hardware/libgcc).
+"""
+import re, subprocess, sys, os, pathlib, collections
+
+OPB = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else os.environ.get("OPB_CLONE", "/tmp/opb"))
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+if not (OPB / ".git").exists():
+    raise SystemExit(f"no OpenPineBuds clone at {OPB}")
+
+IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_.$]*$")
+def sh(cmd):
+    return subprocess.run(cmd, capture_output=True, text=True, errors="replace").stdout
+def syms(path, undefined=False):
+    args = ["nm", "-g", "-f", "posix"] + (["-u"] if undefined else ["--defined-only"]) + [str(path)]
+    out, res = sh(args), []
+    for ln in out.splitlines():
+        p = ln.split()
+        if len(p) >= 2 and IDENT.match(p[0]):
+            res.append((p[0], p[1], int(p[3]) if len(p) > 3 and p[3].isdigit() else 0))
+    return res
+
+libs = sorted(p for p in OPB.rglob("*.a") if ".git" not in p.parts)
+files = [p for p in OPB.rglob("*") if ".git" not in p.parts and p.suffix in {".c", ".h", ".cpp", ".S", ".s"}]
+headers = [p for p in files if p.suffix == ".h"]
+def idents_of(paths):
+    t = "\n".join(p.read_text(errors="replace") for p in paths)
+    return set(re.findall(r"[A-Za-z_][A-Za-z0-9_]{2,}", t)), t
+src_ids, _ = idents_of([p for p in files if p.suffix != ".h"])
+hdr_ids, hdr_text = idents_of(headers)
+
+exported_funcs, exported_data, exported_all = set(), set(), set()
+undef_open, undef_blob, undef_none = collections.Counter(), collections.Counter(), collections.Counter()
+per_lib = []
+blob_defined = {}
+for lib in libs:
+    d = syms(lib)
+    blob_defined[str(lib)] = {n for n, t, _ in d}
+    f = {n for n, t, _ in d if t in "TW" and IDENT.match(n)}
+    dv = {n for n, t, _ in d if t in "DVBRGS" and IDENT.match(n)}
+    exported_funcs |= f; exported_data |= dv
+    per_lib.append((str(lib.relative_to(OPB)), sorted(f),
+                    len(f), sum(1 for n in f if n in hdr_ids),
+                    sum(1 for n in f if n in src_ids),
+                    sum(1 for n in f if n not in hdr_ids and n not in src_ids),
+                    sep := len(dv)))
+exported_all = exported_funcs | exported_data
+for lib in libs:
+    for n, t, _ in syms(lib, undefined=True):
+        if not IDENT.match(n):
+            continue
+        if n in src_ids:
+            undef_open[n] += 1
+        elif any(n in s for s in blob_defined.values()):
+            undef_blob[n] += 1
+        else:
+            undef_none[n] += 1
+
+# which shipped headers declare functions the blobs define
+hdr_hits = []
+for h in headers:
+    try:
+        names = set(re.findall(r"([A-Za-z_][A-Za-z0-9_]{3,})\s*\(", h.read_text(errors="replace")))
+    except Exception:
+        continue
+    hit = names & exported_funcs
+    if hit:
+        hdr_hits.append((str(h.relative_to(OPB)), len(hit)))
+hdr_hits.sort(key=lambda x: -x[1])
+
+DOMAINS = [
+    (r"^(anc|af_anc|ana_anc|anc_)", "ANC (active noise cancelling)"),
+    (r"^(a2dp|avrcp|avdtp|sdp|rfcomm|l2cap|obex|hfp|hshf|hsp|spp|map_|pbap|besaud|btm_)", "BT profiles / protocols"),
+    (r"^(btif|me_|bt_)", "BT interface layer"),
+    (r"^(gapc|gapm|gap_|ke_|att|attc|atts|smp|gatt|l2cc|prf|rwip|ble_)", "BLE host stack"),
+    (r"^(ibrt|tws|nrec)", "TWS / IBRT"),
+    (r"^(speech_|aec|mdf|ns3|nsx|lcmmse|logmmse|vad|denoise|wind_|howling|wb_|post_denoise|noise_|sensormic|feedback)", "audio DSP / speech enhancement"),
+    (r"^(eq|drc|limiter|crossover|resample|fft|kiss_|iir|fir|agc|adj_mc|vqe)", "audio processing / filter"),
+    (r"^(sbc|fdkaac|aac|_ZN|_ZNK|_Z)", "audio codecs"),
+    (r"^(ldac|lhdc)", "LDAC / LHDC codecs"),
+    (r"^(hal_|os_|co_|sys_|pmu|analog|btdrv|norflash)", "platform / HAL"),
+    (r"^(Crc|crc|aes|sha|rand|encrypt|decrypt)", "crypto"),
+]
+def domain(n):
+    for pat, lab in DOMAINS:
+        if re.match(pat, n):
+            return lab
+    return "other/misc"
+dom_funcs = collections.Counter(domain(n) for n in exported_funcs)
+dom_data = collections.Counter(domain(n) for n in exported_data)
+
+# C++ evidence: Itanium-ABI mangled names (_Z...), demangled in one pass
+mangled = set()
+for lib in libs:
+    mangled |= {n for n, t, _ in syms(lib) if n.startswith("_Z")}
+dem = subprocess.run(["c++filt"], input="\n".join(sorted(mangled)), capture_output=True,
+                     text=True, errors="replace").stdout
+cxx_names = [l for l in dem.splitlines() if l and not l.startswith("_Z")]
+
+L = [f"# What the SDK exposes, and what it needs back ({__import__('datetime').date.today().isoformat()})", "",
+     "Generated by `scripts/apisurface.py` from the 23 closed `*.a` archives and the",
+     f"{len(headers)} headers / {len(files)} source files in the open tree.", "",
+     "## Outward: the API the blobs publish", "",
+     f"- {len(exported_funcs):,} distinct functions and {len(exported_data):,} data objects are exported in total.",
+     f"- {sum(1 for n in exported_funcs if n in hdr_ids):,} of those functions "
+     f"({100 * sum(1 for n in exported_funcs if n in hdr_ids) // max(len(exported_funcs),1)}%) are declared in a header "
+     "that ships in the open tree - that is the SDK's documented surface.",
+     f"- {sum(1 for n in exported_funcs if n in src_ids):,} are referenced by open sources (the surface actually used).",
+     f"- {sum(1 for n in exported_funcs if n not in hdr_ids and n not in src_ids):,} appear in no shipped header and no "
+     "open source: internal helpers of the blobs.", "",
+     "### Per library", "", "| library | funcs | declared in tree headers | called by open code | internal only | data |",
+     "|---|---:|---:|---:|---:|---:|"]
+for rel, fl, nf, nd, nu, ni, ndv in sorted(per_lib, key=lambda r: -r[2]):
+    L.append(f"| `{rel}` | {nf} | {nd} | {nu} | {ni} | {ndv} |")
+L += ["", "### By functional area (exported functions)", "", "| area | functions | data objects |", "|---|---:|---:|"]
+for lab, c in dom_funcs.most_common():
+    L.append(f"| {lab} | {c} | {dom_data.get(lab, 0)} |")
+if cxx_names:
+    L += ["", f"{len(mangled):,} exported symbols are name-mangled C++ (Itanium ABI, `_Z...`), i.e. "
+          "compiled C++ object code linked in, not C. They are concentrated in the multimedia "
+          "archive and are Fraunhofer FDK-AAC - which also publishes its C API there "
+          "(`aacDecoder_Open`, `aacDecoder_Fill`, `aacDecoder_DecodeFrame`, `aacDecoder_SetParam`). "
+          "Demangled internals:", ""]
+    L += [f"- `{n}`" for n in cxx_names[:8]]
+L += ["", "### Which shipped headers declare closed implementations (top 25)", "",
+      "| header | closed functions it declares |", "|---|---:|"]
+for h, c in hdr_hits[:25]:
+    L.append(f"| `{h}` | {c} |")
+L += ["", "## Inward: what the blobs require from the rest of the firmware", "",
+      f"- {sum(undef_open.values()):,} undefined references resolve to symbols the open tree defines.",
+      f"- {sum(undef_blob.values()):,} resolve to other blobs.",
+      f"- {sum(undef_none.values()):,} resolve to neither (ROM code, hardware libraries, libgcc).", "",
+      "### Integration points the closed code calls back into (top 30)", "",
+      "| symbol | blobs needing it |", "|---|---:|"]
+for n, c in undef_open.most_common(30):
+    L.append(f"| `{n}` | {c} |")
+L += ["", "### Unresolved, grouped", "", "| area | symbols |", "|---|---:|"]
+uu = collections.Counter(domain(n) for n in undef_none)
+for lab, c in uu.most_common(12):
+    L.append(f"| {lab} | {c} |")
+L += ["", "## Reading", "",
+      "- The outward surface is large and mostly *documented*: the tree ships the headers for the "
+      "closed implementations, so a compatible replacement is an ABI question, not a guessing game.",
+      "- A replacement does not need the whole surface: only the subset open sources call plus the "
+      "subset the remaining blobs import from each other.",
+      "- The inward list is the contract we must satisfy to link the blobs at all; it is where an "
+      "open reimplementation has to start.", ""]
+(ROOT / "docs" / "sdk-surface.md").write_text("\n".join(L))
+print(f"wrote docs/sdk-surface.md: {len(exported_funcs)} exported funcs, "
+      f"{len(cxx_names)} C++ symbols, {len(undef_open)} inward refs, {len(hdr_hits)} headers with closed impls")
