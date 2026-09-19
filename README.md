@@ -29,6 +29,7 @@ the fork network counts once.
 | [`include/anc_reconstructed/`](include/anc_reconstructed) | generated declarations, one header per withheld vendor source file |
 | [`docs/patch-status.md`](docs/patch-status.md) | replay result for every patch (`git am --3way` onto its recorded base) |
 | [`docs/upstream-answers.md`](docs/upstream-answers.md) | paste-ready answers to the recurring upstream questions (the EQ and touch threads are locked, so those two live here) |
+| [`data/withheld-sources.tsv`](data/withheld-sources.tsv) | the 498 files the blobs name but the tree does not ship (303 BES / 195 third-party), with the archive count and whether a header was reconstructed |
 | [`data/patch-manifest.json`](data/patch-manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed (metadata only, no diffs) |
 | `patches/*.patch` | **not distributed** - commit-for-commit patches are fetched locally by `scripts/refresh.py` into `patches/` (gitignored). They are third-party diffs whose context lines derive from BES shared-source code, so they stay out of this repo |
 

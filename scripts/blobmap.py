@@ -54,6 +54,30 @@ for lib in libs:
     flags |= set(re.findall(r"GNU C99 [^\x00]{0,400}", out))
     builddirs |= set(re.findall(r"/home/[A-Za-z0-9_./-]+/out/[A-Za-z0-9_]+", out))
 
+# flat per-file list for the relicensing effort: paths and categories only, no code
+import json as _json
+_protos = collections.Counter()
+_hp = ROOT / "data" / "headerless-api.json"
+if _hp.exists():
+    _d = _json.loads(_hp.read_text())
+    _recs = _d["functions"] if isinstance(_d, dict) and "functions" in _d else _d
+    for _r in _recs:
+        _s = (_r.get("source") or "").replace("../", "")
+        if _s:
+            _protos[_s] += 1
+_gen = set()
+for _h in sorted((ROOT / "include" / "anc_reconstructed").glob("*.h")):
+    _m = re.search(r"Interface of (\S+) \(closed BES", _h.read_text(errors="replace"))
+    if _m:
+        _gen.add(_m.group(1).replace("../", "").lstrip("/"))
+_rows = [["vendor_source", "archives_naming_it", "category", "prototypes_recovered", "generated_header"]]
+for _path, _n in sorted(missing_all.items()):
+    _tp = _path.startswith("thirdparty/") or any(k in _path for k in ("fdkaac", "lhdc", "ldac"))
+    _rows.append([_path, str(_n), "third-party" if _tp else "BES",
+                  str(_protos.get(_path, "")), "yes" if _path in _gen else ""])
+(ROOT / "data" / "withheld-sources.tsv").write_text("\n".join("\t".join(r) for r in _rows) + "\n")
+print(f"wrote data/withheld-sources.tsv ({len(_rows) - 1} files)")
+
 stamp = __import__("datetime").date.today().isoformat()
 L = [f"# What is inside the closed blobs ({stamp})", "",
      f"Metadata-level survey of the {len(libs)} prebuilt `*.a` archives linked by the OpenPineBuds "
