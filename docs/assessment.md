@@ -1,6 +1,7 @@
 # Assessment: what is worth landing, and how
 
-Survey date 2026-09-19, upstream `pine64/OpenPineBuds` @ `81b9afc7`.
+Survey date 2026-09-19, upstream `pine64/OpenPineBuds` @ `81b9afc7`. Coverage: all 49 reachable
+repositories (47 direct forks + 2 forks-of-forks), every branch of each, tips deduplicated.
 
 ## Verdicts
 
@@ -27,8 +28,10 @@ Survey date 2026-09-19, upstream `pine64/OpenPineBuds` @ `81b9afc7`.
    (upstream ANC is still "currently non functional, WIP", issue #41).
 5. **`mbyzhang` FB-mic talk-through** (1 commit, 6 files, replays cleanly). Tiny, obviously
    useful, easy to review — a cheap win and a test of the merge process.
-6. **Mic streaming / remote logging** — `RTIS-Lab` (5 commits, replays cleanly) gives RFCOMM
-   mic capture + remote logs, which is what any future audio/sensor work needs.
+6. **Mic streaming / remote logging** — `RTIS-Lab` (5 commits, replays cleanly) and
+   `wojtas999:wojtas` (5 commits, branch only, replays cleanly) both give RFCOMM mic capture +
+   remote logs, which is what any future audio/sensor work needs. Two independent
+   implementations of the same feature: pick one, ideally the one whose branch is cleaner.
 
 ### Worth as reference data, not as a merge
 
@@ -45,12 +48,17 @@ Survey date 2026-09-19, upstream `pine64/OpenPineBuds` @ `81b9afc7`.
   `tgt_hardware.c`.
 - **`Zoey-Tan`** — HFP at 44.1 kHz fails, reverted to 8 kHz: a useful negative result to record,
   plus macOS flash scripts.
+- **`ThatcherC`** branches `build-from-mp3s` (+26) / `build-from-wavs` (+25, 132 behind) — the
+  original sound-file build system, already superseded by merged PRs #28/#45. Historical interest.
+- **`Haxk20:anc-testing`** (+15, 114 behind) — the ANC lineage that became the merged
+  `anc-switching-fix` work; only the parts not already upstream are interesting.
 
 ### Not worth anything as a source
 
-- The **38 forks with 0 unique commits**. Includes `gcostello65/OpenConeBuds` (renamed, no work),
+- The **27 forks with 0 unique commits on any branch**. Includes `gcostello65/OpenConeBuds` (renamed, no work),
   `marfrit` (his ANC work is already upstream), `pughb/Open-OAE-Buds` (interesting goal, but its
-  branches are empty relative to main) and `SilentBob347/OpenPineBuds` `main`.
+  branches hold nothing of its own — its "ahead=18" is the shared CMake/Rust branch set) and
+  `SilentBob347/OpenPineBuds` `main`.
 - Related but separate projects, to watch rather than merge: `hall/little-buddy` (independent
   minimal firmware, releases + 11 language packs), `Qiangest/PineBuds-Pro-Plus` (in-ear audio
   sensing research), `nnonickreal/openqore` + `besota`, `Ralim/bestool`.

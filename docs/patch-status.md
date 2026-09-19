@@ -1,6 +1,6 @@
 # Patch replay status
 
-Each `patches/*.patch` replayed onto its recorded base commit with `git am --3way`; `commits` = commits created / 15 entries.
+Each `patches/*.patch` replayed onto its recorded base commit with `git am --3way`; `commits` = commits created / 19 entries.
 
 | fork | branch | result | commits | first conflicting commit |
 |---|---|---|---:|---|
@@ -8,9 +8,13 @@ Each `patches/*.patch` replayed onto its recorded base commit with `git am --3wa
 | nnonickreal/openqore-sdk | main | conflicts | 12/37 | 0013 Add files via upload |
 | hugohabthroxy/OpenPineBuds | main | replays | 17/17 |  |
 | RTIS-Lab/OpenPineBuds | main | replays | 5/5 |  |
+| wojtas999/OpenPineBuds | wojtas | replays | 4/5 |  |
 | arin-s/DOOMBuds | main | replays | 19/19 |  |
 | shymega/OpenPineBuds | cmake | replays | 16/16 |  |
 | shymega/OpenPineBuds | rust-support | replays | 17/17 |  |
+| nicka101/OpenPineBuds | cmake | conflicts | 16/17 | 0017 WIP CMakeLists for utils, platform, rtos |
+| Haxk20/OpenPineBuds | anc-testing | replays | 15/15 |  |
+| ThatcherC/OpenPineBuds | build-from-mp3s | conflicts | 12/26 | 0013 Deleted .txt sounds and fixed Make system to make them! |
 | BreezeLabsAG/OpenPineBuds | ph_dsp_bypass | conflicts | 0/6 | 0001 updated container to Debian bookworm |
 | BreezeLabsAG/OpenPineBuds | SPEECH_TX_EQ_approach | replays | 1/1 |  |
 | BreezeLabsAG/OpenPineBuds | SPEECH_TX_MIC_CALIBRATION_approach | replays | 1/1 |  |
@@ -20,7 +24,7 @@ Each `patches/*.patch` replayed onto its recorded base commit with `git am --3wa
 | jdc-cunningham/OpenPineBuds | main | replays | 3/3 |  |
 | Zoey-Tan/OpenPineBuds | main | replays | 1/1 |  |
 
-**12/15 patches replay commit-for-commit.**
+**14/19 patches replay commit-for-commit.**
 
 A patch that reports `conflicts` replays part-way: those branches carry commits from another lineage (e.g. a devcontainer/CMake side-branch) or large parallel merges, so replay onto the merge-base collides. Use the branch upstream, or resolve the reported commit by hand.
 
