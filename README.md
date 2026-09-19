@@ -28,6 +28,7 @@ the fork network counts once.
 | [`data/headerless-api.json`](data/headerless-api.json) | the same inventory as machine-readable records (types, args, source line) |
 | [`include/anc_reconstructed/`](include/anc_reconstructed) | generated declarations, one header per withheld vendor source file |
 | [`docs/patch-status.md`](docs/patch-status.md) | replay result for every patch (`git am --3way` onto its recorded base) |
+| [`docs/upstream-answers.md`](docs/upstream-answers.md) | paste-ready answers to the recurring upstream questions (the EQ and touch threads are locked, so those two live here) |
 | [`patches/manifest.json`](patches/manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed |
 | `patches/*.patch` | commit-for-commit patches (binary sections stripped) |
 
