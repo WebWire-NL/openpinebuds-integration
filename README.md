@@ -20,6 +20,7 @@ the fork network counts once.
 |---|---|
 | [`docs/fork-survey.md`](docs/fork-survey.md) | all 47 forks: ahead/behind vs upstream, last push, recent commit subjects |
 | [`docs/assessment.md`](docs/assessment.md) | which fork work is worth landing, which is only reference material, risks, roadmap |
+| [`docs/closed-blobs.md`](docs/closed-blobs.md) | what is recoverable from the 23 closed `.a` blobs (DWARF, source paths, flags, code size) |
 | [`docs/patch-status.md`](docs/patch-status.md) | replay result for every patch (`git am --3way` onto its recorded base) |
 | [`patches/manifest.json`](patches/manifest.json) | per-source: fork, branch, base/head SHA, ahead/behind, files changed |
 | `patches/*.patch` | commit-for-commit patches (binary sections stripped) |
@@ -66,6 +67,7 @@ parallel merges). Prefer working on a fork of upstream and rebasing over carryin
 ```sh
 scripts/refresh.py                    # re-survey forks + re-download patches (needs `gh` auth)
 scripts/verify_patches.py [/path/to/OpenPineBuds-clone]   # replay check
+scripts/blobmap.py [/path/to/OpenPineBuds-clone]           # closed-blob inventory (writes docs/closed-blobs.md)
 ```
 
 ## Licence / status of this repo
