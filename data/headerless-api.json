@@ -3,6 +3,7 @@
  "library": "services/multimedia/lib/best2300p_libmultimedia_cp_anc.a",
  "filter": "(anc|adj_mc|iir|fft|eq|drc|wind|denoise|speech|vqe|dsp)",
  "provenance": "prototypes reconstructed from DWARF (.debug_info) left in the prebuilt archive; no vendor source and no code body is included",
+ "scope": "headerless is relative to pine64/OpenPineBuds; 5 of the 180 external names and 232 of all 529 recovered names are also declared in other public BES SDK trees (see docs/prior-art.md), but no public tree contains the implementations",
  "counts": {
   "recovered": 529,
   "declared_in_tree_header": 228,

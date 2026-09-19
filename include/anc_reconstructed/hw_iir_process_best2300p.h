@@ -7,6 +7,7 @@
  * These are declarations only: types refer to definitions elsewhere in this tree,
  * the file is not guaranteed to compile standalone, and the implementation behind
  * it remains BES's proprietary code - declaration here grants no licence.
+ * Scope and prior art: docs/prior-art.md in this repository.
  */
 #ifndef ANC_RECONSTRUCTED_HW_IIR_PROCESS_BEST2300P_H
 #define ANC_RECONSTRUCTED_HW_IIR_PROCESS_BEST2300P_H

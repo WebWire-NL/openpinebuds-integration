@@ -23,6 +23,7 @@ the fork network counts once.
 | [`docs/closed-blobs.md`](docs/closed-blobs.md) | what is recoverable from the 23 closed `.a` blobs (DWARF, source paths, flags, code size) |
 | [`docs/sdk-surface.md`](docs/sdk-surface.md) | what the blobs export (4,723 functions), what the tree already documents, and what the blobs require back |
 | [`docs/anc-prototypes.md`](docs/anc-prototypes.md) | 593 ANC/DSP prototypes reconstructed from blob DWARF (return types, params, source lines) |
+| [`docs/prior-art.md`](docs/prior-art.md) | who published what first: the headers exist in other SDK trees, the implementations and the DWARF analysis do not |
 | [`docs/headerless-api.md`](docs/headerless-api.md) | the 301 closed functions **no** shipped header declares (180 external, 121 static) |
 | [`data/headerless-api.json`](data/headerless-api.json) | the same inventory as machine-readable records (types, args, source line) |
 | [`include/anc_reconstructed/`](include/anc_reconstructed) | generated declarations, one header per withheld vendor source file |

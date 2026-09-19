@@ -51,6 +51,9 @@ promotable = [r for r in ext if "?" not in r["return"] and not any("?" in a["typ
     "filter": FILT.pattern,
     "provenance": "prototypes reconstructed from DWARF (.debug_info) left in the prebuilt archive; "
                   "no vendor source and no code body is included",
+    "scope": "headerless is relative to pine64/OpenPineBuds; 5 of the 180 external names and 232 of "
+             "all 529 recovered names are also declared in other public BES SDK trees (see docs/prior-art.md), "
+             "but no public tree contains the implementations",
     "counts": {"recovered": len(recs), "declared_in_tree_header": len(recs) - len(headless),
                "headerless": len(headless), "headerless_external": len(ext),
                "headerless_static": len(statics), "fully_typed": len(promotable)},
@@ -81,6 +84,7 @@ for src, rs in sorted(by_src.items()):
              " * These are declarations only: types refer to definitions elsewhere in this tree,",
              " * the file is not guaranteed to compile standalone, and the implementation behind",
              " * it remains BES's proprietary code - declaration here grants no licence.",
+             " * Scope and prior art: docs/prior-art.md in this repository.",
              " */",
              f"#ifndef {guard}", f"#define {guard}", ""]
     for r in sorted(rs, key=lambda r: r["line"] or 0):
@@ -106,6 +110,9 @@ L = [f"# The closed API that no header declares ({__import__('datetime').date.to
      "vendor source file: [`include/anc_reconstructed/`](../include/anc_reconstructed).", "",
      "Only interface metadata is published - names, types, line numbers. No decompiled code, and no "
      "licence to the implementation, which remains BES's.", "",
+     "**Scope:** \"no header declares\" is relative to `pine64/OpenPineBuds`. Some of these names are",
+     "declared in *other* public BES SDK trees - 5 of the 180 external ones below, 232 of all 529",
+     "recovered names. The implementations are public nowhere. See [prior-art.md](prior-art.md).", "",
      "## Where they come from", "", "| file | external | static |", "|---|---:|---:|"]
 for src in sorted(by_src, key=lambda s: -len(by_src[s])):
     st = sum(1 for r in statics if r["source"] == src)
